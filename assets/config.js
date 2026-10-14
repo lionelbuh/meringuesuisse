@@ -14,7 +14,7 @@ window.SITE = {
   // ---- Forms ---------------------------------------------------------------
   // Optional: a Formspree (or similar) endpoint, e.g. "https://formspree.io/f/xxxxxxx".
   // If empty, forms open the visitor's email app addressed to contactEmail.
-  formEndpoint: "",
+  formEndpoint: "https://formspree.io/f/mbgdzqke",
   contactEmail: "hello@meringuesuisse.com",
   instagramUrl: "",            // e.g. "https://instagram.com/yourhandle" — footer link appears when set
 
