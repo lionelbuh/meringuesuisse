@@ -43,8 +43,21 @@ export default {
       new Response(JSON.stringify(body), { status, headers: { ...cors, "Content-Type": "application/json" } });
 
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+    // Opening the worker URL in a browser shows a quick health check.
+    if (request.method === "GET") {
+      const key = env.STRIPE_SECRET_KEY || "";
+      return json({
+        worker: "ok",
+        stripeKey: !key ? "MISSING - add the STRIPE_SECRET_KEY secret"
+          : key.startsWith("sk_test_") ? "test key ok"
+          : key.startsWith("sk_live_") ? "live key ok"
+          : key.startsWith("rk_") ? "restricted key - use the Secret key (sk_...) instead"
+          : "WRONG KEY - it must start with sk_test_ or sk_live_ (not pk_)"
+      });
+    }
     if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
-    if (!ALLOWED_ORIGINS.includes(origin)) return json({ error: "Forbidden" }, 403);
+    if (!ALLOWED_ORIGINS.includes(origin)) return json({ error: "Forbidden origin: " + origin }, 403);
+    if (!env.STRIPE_SECRET_KEY) return json({ error: "STRIPE_SECRET_KEY secret is missing" }, 500);
 
     let items;
     try { items = (await request.json()).items; } catch { return json({ error: "Invalid request" }, 400); }
@@ -88,7 +101,7 @@ export default {
     const session = await res.json();
     if (!res.ok) {
       console.error("Stripe error", session && session.error);
-      return json({ error: "Payment page unavailable" }, 502);
+      return json({ error: "Stripe: " + ((session && session.error && session.error.message) || res.status) }, 502);
     }
     return json({ url: session.url });
   }

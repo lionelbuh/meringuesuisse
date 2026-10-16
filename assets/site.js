@@ -75,9 +75,10 @@
       var m=$("#soon");
       if(!S.checkoutEndpoint){m.classList.add("show");return}
       var label=btn.textContent;btn.disabled=true;btn.textContent="Redirecting to secure payment…";
-      var fail=function(){btn.disabled=false;btn.textContent=label;m.innerHTML='Sorry, we could not open the payment page. Please try again or <a href="contact.html">contact us</a>.';m.classList.add("show")};
+      var fail=function(why){btn.disabled=false;btn.textContent=label;m.innerHTML='Sorry, we could not open the payment page. Please try again or <a href="contact.html">contact us</a>.<br><small style="opacity:.7">'+esc(String(why||""))+'</small>';m.classList.add("show");if(window.console)console.error("Checkout failed:",why)};
       fetch(S.checkoutEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({items:load()})})
-        .then(function(r){return r.json()}).then(function(d){if(d&&d.url)window.location.href=d.url;else fail()}).catch(fail);
+        .then(function(r){return r.text().then(function(t){try{return JSON.parse(t)}catch(e){throw new Error("Unexpected reply from checkout ("+r.status+"): "+t.slice(0,80))}})})
+        .then(function(d){if(d&&d.url)window.location.href=d.url;else fail(d&&d.error)}).catch(function(e){fail(e&&e.message)});
     });
     render();
   }
