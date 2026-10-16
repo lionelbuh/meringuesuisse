@@ -9,6 +9,8 @@
   function flavors(){return S.product.flavors.filter(function(f){return f.enabled})}
   function size(id){return S.product.sizes.find(function(s){return s.id===id})}
   function flavor(id){return S.product.flavors.find(function(f){return f.id===id})}
+  function boxes(c){return c.reduce(function(a,l){return a+l.qty},0)}
+  function shipping(n){if(!n)return 0;var t=(S.shippingTiers||[]).find(function(t){return t.maxBoxes==null||n<=t.maxBoxes});return t?t.price:null}
   function esc(t){var d=document.createElement("div");d.textContent=t;return d.innerHTML}
 
   // nav
@@ -56,9 +58,12 @@
       box.innerHTML=c.map(function(l,i){var s=size(l.size),f=flavor(l.flavor);if(!s||!f)return"";sub+=s.price*l.qty;
         return '<div class="line"><img src="'+(imgFor[l.flavor]||"images/closeup.jpg")+'" alt=""><div><h3>'+esc(S.product.name)+' — '+esc(f.name)+'</h3><div class="meta">'+esc(s.label)+' · '+money(s.price)+' each</div><button class="rm" data-i="'+i+'">Remove</button></div><div class="qty" aria-label="Quantity"><button data-d="-1" data-i="'+i+'" aria-label="Decrease">−</button><input value="'+l.qty+'" readonly aria-label="Quantity"><button data-d="1" data-i="'+i+'" aria-label="Increase">+</button></div></div>'}).join("");
       $("#sub").textContent=money(sub);
-      var ship=S.shippingFlat;
-      $("#ship").textContent=ship==null?"Calculated at confirmation":money(ship);
+      var n=boxes(c),ship=shipping(n);
+      $("#ship").textContent=ship==null?"Calculated at confirmation":ship===0?"Free":money(ship);
       $("#total").textContent=ship==null?money(sub)+" + shipping":money(sub+ship);
+      var hint=$("#ship-hint"),T=S.shippingTiers||[],fi=T.findIndex(function(t){return t.price===0});
+      if(hint){var left=fi>0?T[fi-1].maxBoxes+1-n:0;
+        hint.textContent=ship===0?"Your order ships free.":left>0?"Add "+left+" more box"+(left>1?"es":"")+" for free shipping.":"";}
     };
     cartEl.addEventListener("click",function(e){
       var t=e.target,i=t.dataset.i;if(i==null)return;var c=load();
@@ -67,11 +72,18 @@
     });
     var btn=$("#checkout");btn.textContent=S.checkoutLabel;
     btn.addEventListener("click",function(){
-      if(S.stripeLink)window.location.href=S.stripeLink;
-      else{var m=$("#soon");m.classList.add("show")}
+      var m=$("#soon");
+      if(!S.checkoutEndpoint){m.classList.add("show");return}
+      var label=btn.textContent;btn.disabled=true;btn.textContent="Redirecting to secure payment…";
+      var fail=function(){btn.disabled=false;btn.textContent=label;m.innerHTML='Sorry, we could not open the payment page. Please try again or <a href="contact.html">contact us</a>.';m.classList.add("show")};
+      fetch(S.checkoutEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({items:load()})})
+        .then(function(r){return r.json()}).then(function(d){if(d&&d.url)window.location.href=d.url;else fail()}).catch(fail);
     });
     render();
   }
+
+  // ---- thank-you page (Stripe success redirect): empty the cart
+  if($("#thanks"))save([]);
 
   // ---- forms (contact + newsletter)
   document.querySelectorAll("form[data-form]").forEach(function(form){

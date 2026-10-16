@@ -7,14 +7,17 @@ Plain HTML/CSS/JS. No build step, no dependencies. Works on GitHub Pages.
 2. Repo **Settings → Pages → Deploy from a branch → `main` / root**.
 3. Custom domain: add `meringuesuisse.com` under Pages → Custom domain (GitHub creates the `CNAME` file), then point your DNS to GitHub Pages. HTTPS is automatic.
 
-## Add your Stripe link
-Open `assets/config.js` and paste your Payment Link into `stripeLink`. Until then, the cart's
-**"Order on the Waiting List"** button shows a "payment link coming soon" note.
-Note: a Stripe Payment Link is a fixed product/price, so create one link per flavor/size (or enable adjustable quantity in Stripe).
-If you want one link per flavor later, ask and I'll wire the flavors to separate links.
+## Payments (Stripe)
+Follow **[STRIPE-SETUP.md](STRIPE-SETUP.md)**: create the Stripe account, deploy the small checkout worker
+(`stripe-checkout/worker.js`, free on Cloudflare), then paste its URL into `checkoutEndpoint` in `assets/config.js`.
+Until then, the cart's **"Order on the Waiting List"** button shows a "payment link coming soon" note.
+
+## Shipping
+Flat fee by number of boxes, set in `shippingTiers` in `assets/config.js` (and in `stripe-checkout/worker.js`):
+$8.90 for 1–3 boxes, $11.90 for 4–6 boxes, free for 7 or more.
 
 ## Change prices, flavors, contact email, shipping
-All in `assets/config.js`: prices, flavors, box sizes (18 and 27 are pre-built, just set a price and `enabled: true`), `contactEmail`, `instagramUrl`, `shippingFlat`.
+All in `assets/config.js`: prices, flavors, box sizes (18 and 27 are pre-built, just set a price and `enabled: true`), `contactEmail`, `instagramUrl`, `shippingTiers`. Prices and shipping must also be updated in `stripe-checkout/worker.js`.
 
 ## Replace photos (no code change)
 Overwrite the file in `images/` using the same file name:

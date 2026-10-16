@@ -4,9 +4,10 @@
    ========================================================================== */
 window.SITE = {
   // ---- Payment -------------------------------------------------------------
-  // Paste your Stripe Payment Link here (https://buy.stripe.com/...) when ready.
+  // URL of your Stripe checkout worker (see STRIPE-SETUP.md), e.g.
+  // "https://meringuesuisse-checkout.<your-account>.workers.dev".
   // While empty, the checkout button shows a friendly "payment link coming soon" note.
-  stripeLink: "",
+  checkoutEndpoint: "",
 
   // Label of the checkout button (advance orders only, before market launch).
   checkoutLabel: "Order on the Waiting List",
@@ -19,9 +20,14 @@ window.SITE = {
   instagramUrl: "",            // e.g. "https://instagram.com/yourhandle" — footer link appears when set
 
   // ---- Shipping ------------------------------------------------------------
-  // Shipping is NOT included in the product price. Leave null until validated.
-  // Example later: shippingFlat: 8.00
-  shippingFlat: null,
+  // Shipping is NOT included in the product price. Flat fee by number of boxes
+  // in the cart. The first tier whose maxBoxes covers the cart applies;
+  // maxBoxes: null means "and above". Keep in sync with stripe-checkout/worker.js.
+  shippingTiers: [
+    { maxBoxes: 3,    price: 8.90  },   // 1 to 3 boxes
+    { maxBoxes: 6,    price: 11.90 },   // 4 to 6 boxes
+    { maxBoxes: null, price: 0     }    // 7+ boxes: free shipping
+  ],
 
   // ---- Products ------------------------------------------------------------
   currency: "USD",
