@@ -7,7 +7,7 @@ window.SITE = {
   // URL of your Stripe checkout worker (see STRIPE-SETUP.md), e.g.
   // "https://meringuesuisse-checkout.<your-account>.workers.dev".
   // While empty, the checkout button shows a friendly "payment link coming soon" note.
-  checkoutEndpoint: "",
+  checkoutEndpoint: "https://meringuesuisse-checkout.buhler-lionel.workers.dev",
 
   // Label of the checkout button (advance orders only, before market launch).
   checkoutLabel: "Order on the Waiting List",
