@@ -53,7 +53,7 @@
     var imgFor={classic:"images/classic.jpg",coffee:"images/coffee.jpg",chocolate:"images/chocolate.jpg"};
     var render=function(){
       var c=load(),box=$("#lines"),sum=$("#summary");
-      if(!c.length){box.innerHTML='<div class="empty"><p class="lede">Your cart is empty.</p><div class="btn-row" style="justify-content:center"><a class="btn" href="shop.html">Shop PETITES</a></div></div>';sum.hidden=true;return}
+      if(!c.length){box.innerHTML='<div class="empty"><p class="lede">Your cart is empty.</p><div class="btn-row" style="justify-content:center"><a class="btn" href="/shop">Shop PETITES</a></div></div>';sum.hidden=true;return}
       sum.hidden=false;var sub=0;
       box.innerHTML=c.map(function(l,i){var s=size(l.size),f=flavor(l.flavor);if(!s||!f)return"";sub+=s.price*l.qty;
         return '<div class="line"><img src="'+(imgFor[l.flavor]||"images/closeup.jpg")+'" alt=""><div><h3>'+esc(S.product.name)+' — '+esc(f.name)+'</h3><div class="meta">'+esc(s.label)+' · '+money(s.price)+' each</div><button class="rm" data-i="'+i+'">Remove</button></div><div class="qty" aria-label="Quantity"><button data-d="-1" data-i="'+i+'" aria-label="Decrease">−</button><input value="'+l.qty+'" readonly aria-label="Quantity"><button data-d="1" data-i="'+i+'" aria-label="Increase">+</button></div></div>'}).join("");
@@ -75,7 +75,7 @@
       var m=$("#soon");
       if(!S.checkoutEndpoint){m.classList.add("show");return}
       var label=btn.textContent;btn.disabled=true;btn.textContent="Redirecting to secure payment…";
-      var fail=function(why){btn.disabled=false;btn.textContent=label;m.innerHTML='Sorry, we could not open the payment page. Please try again or <a href="contact.html">contact us</a>.<br><small style="opacity:.7">'+esc(String(why||""))+'</small>';m.classList.add("show");if(window.console)console.error("Checkout failed:",why)};
+      var fail=function(why){btn.disabled=false;btn.textContent=label;m.innerHTML='Sorry, we could not open the payment page. Please try again or <a href="/contact">contact us</a>.<br><small style="opacity:.7">'+esc(String(why||""))+'</small>';m.classList.add("show");if(window.console)console.error("Checkout failed:",why)};
       fetch(S.checkoutEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({items:load()})})
         .then(function(r){return r.text().then(function(t){try{return JSON.parse(t)}catch(e){throw new Error("Unexpected reply from checkout ("+r.status+"): "+t.slice(0,80))}})})
         .then(function(d){if(d&&d.url)window.location.href=d.url;else fail(d&&d.error)}).catch(function(e){fail(e&&e.message)});

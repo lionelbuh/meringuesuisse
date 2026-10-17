@@ -81,8 +81,8 @@ export default {
 
     const tier = SHIPPING_TIERS.find(t => t.maxBoxes == null || boxes <= t.maxBoxes);
     params.append("mode", "payment");
-    params.append("success_url", `${SITE}/thank-you.html?session_id={CHECKOUT_SESSION_ID}`);
-    params.append("cancel_url", `${SITE}/cart.html`);
+    params.append("success_url", `${SITE}/thank-you?session_id={CHECKOUT_SESSION_ID}`);
+    params.append("cancel_url", `${SITE}/cart`);
     params.append("shipping_address_collection[allowed_countries][0]", "US");
     params.append("shipping_options[0][shipping_rate_data][type]", "fixed_amount");
     params.append("shipping_options[0][shipping_rate_data][display_name]", tier.name);

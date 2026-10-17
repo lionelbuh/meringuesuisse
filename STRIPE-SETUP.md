@@ -52,7 +52,7 @@ The worker only accepts requests from `meringuesuisse.com`, so test on the live 
 1. On the live site, add boxes to the cart and click **Order on the Waiting List**.
 2. Pay with test card `4242 4242 4242 4242`, any future date, any CVC, any ZIP.
 3. Check the shipping line: 1–2 boxes = $9.90, 3–4 = $12.90, 5–7 = $14.90, 8+ = $0.00.
-4. You land on `thank-you.html` and the cart is emptied. The order appears in Stripe → **Payments**,
+4. You land on the Thank You page and the cart is emptied. The order appears in Stripe → **Payments**,
    with flavors, quantities, shipping address and phone.
 5. Go live: activate the account (step 1.3), copy the **live** secret key (`sk_live_...`) and replace
    `STRIPE_SECRET_KEY` in the worker. No change is needed on the website.
