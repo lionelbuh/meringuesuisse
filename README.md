@@ -24,12 +24,14 @@ Overwrite the file in `images/` using the same file name:
 
 | File | Used for |
 |---|---|
-| `hero.jpg` | Home page hero (open box with 9 meringues) |
-| `box-open.jpg` | Product section, shop gallery, gift section |
-| `box-closed.jpg` | Closed box / packaging |
-| `closeup.jpg`, `texture.jpg` | Close-ups (shop gallery) |
+| `hero.jpg` | Home page hero (open kraft box with 9 meringues) |
+| `box-open.jpg` | Shop page main photo |
+| `gift-set.jpg` | Home "Small delights" section (tied box + story card) |
+| `box-closed.jpg` | Tied box with tag (home gift row, shop gallery) |
+| `gift-card.jpg` | Gift tag close-up (home gift row, shop gallery) |
+| `story-card.jpg` | Story card (home gift row) |
+| `closeup.jpg` | Meringue close-up (shop gallery) |
 | `classic.jpg`, `coffee.jpg`, `chocolate.jpg` | Flavor cards and cart |
-| `gift-card.jpg` | Box and story card |
 | `switzerland.jpg` | Swiss spirit band and Our Story page |
 
 Tip: JPEG, about 1200–1600 px wide, under 300 KB.
