@@ -14,7 +14,7 @@ Until then, the cart's **"Order on the Waiting List"** button shows a "payment l
 
 ## Shipping
 Flat fee by number of boxes, set in `shippingTiers` in `assets/config.js` (and in `stripe-checkout/worker.js`):
-$8.90 for 1–3 boxes, $11.90 for 4–6 boxes, free for 7 or more.
+$9.90 for 1–2 boxes, $12.90 for 3–4, $14.90 for 5–7, free for 8 or more.
 
 ## Change prices, flavors, contact email, shipping
 All in `assets/config.js`: prices, flavors, box sizes (18 and 27 are pre-built, just set a price and `enabled: true`), `contactEmail`, `instagramUrl`, `shippingTiers`. Prices and shipping must also be updated in `stripe-checkout/worker.js`.

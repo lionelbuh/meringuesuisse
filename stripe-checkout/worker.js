@@ -22,9 +22,10 @@ const FLAVORS = { classic: "Classic", coffee: "Coffee", chocolate: "Chocolate" }
 
 // Flat shipping by number of boxes. maxBoxes: null = "and above".
 const SHIPPING_TIERS = [
-  { maxBoxes: 3, price: 890, name: "Flat-rate shipping (1–3 boxes)" },
-  { maxBoxes: 6, price: 1190, name: "Flat-rate shipping (4–6 boxes)" },
-  { maxBoxes: null, price: 0, name: "Free shipping (7+ boxes)" }
+  { maxBoxes: 2, price: 990, name: "Small order shipping (1–2 boxes)" },
+  { maxBoxes: 4, price: 1290, name: "Medium parcel shipping (3–4 boxes)" },
+  { maxBoxes: 7, price: 1490, name: "Heavier parcel shipping (5–7 boxes)" },
+  { maxBoxes: null, price: 0, name: "Free shipping (8+ boxes)" }
 ];
 
 const MAX_QTY_PER_LINE = 20;

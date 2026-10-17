@@ -7,9 +7,10 @@ Checkout page from the cart, with these shipping fees:
 
 | Boxes in cart | Shipping |
 |---|---|
-| 1 to 3 | $8.90 |
-| 4 to 6 | $11.90 |
-| 7 or more | Free |
+| 1 to 2 (small order) | $9.90 |
+| 3 to 4 (medium parcel) | $12.90 |
+| 5 to 7 (heavier parcel) | $14.90 |
+| 8 or more | Free |
 
 Prices and shipping are set inside the worker, so nobody can change them from the browser.
 
@@ -50,7 +51,7 @@ The worker only accepts requests from `meringuesuisse.com`, so test on the live 
 ## 5. Test, then go live
 1. On the live site, add boxes to the cart and click **Order on the Waiting List**.
 2. Pay with test card `4242 4242 4242 4242`, any future date, any CVC, any ZIP.
-3. Check the shipping line: 1–3 boxes = $8.90, 4–6 = $11.90, 7+ = $0.00.
+3. Check the shipping line: 1–2 boxes = $9.90, 3–4 = $12.90, 5–7 = $14.90, 8+ = $0.00.
 4. You land on `thank-you.html` and the cart is emptied. The order appears in Stripe → **Payments**,
    with flavors, quantities, shipping address and phone.
 5. Go live: activate the account (step 1.3), copy the **live** secret key (`sk_live_...`) and replace

@@ -24,9 +24,10 @@ window.SITE = {
   // in the cart. The first tier whose maxBoxes covers the cart applies;
   // maxBoxes: null means "and above". Keep in sync with stripe-checkout/worker.js.
   shippingTiers: [
-    { maxBoxes: 3,    price: 8.90  },   // 1 to 3 boxes
-    { maxBoxes: 6,    price: 11.90 },   // 4 to 6 boxes
-    { maxBoxes: null, price: 0     }    // 7+ boxes: free shipping
+    { maxBoxes: 2,    price: 9.90  },   // 1 to 2 boxes: small order
+    { maxBoxes: 4,    price: 12.90 },   // 3 to 4 boxes: medium parcel
+    { maxBoxes: 7,    price: 14.90 },   // 5 to 7 boxes: heavier parcel
+    { maxBoxes: null, price: 0     }    // 8+ boxes: free shipping
   ],
 
   // ---- Products ------------------------------------------------------------
