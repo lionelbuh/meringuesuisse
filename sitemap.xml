@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-<url><loc>https://meringuesuisse.com/</loc></url>
-<url><loc>https://meringuesuisse.com/shop</loc></url>
-<url><loc>https://meringuesuisse.com/story</loc></url>
-<url><loc>https://meringuesuisse.com/contact</loc></url>
-<url><loc>https://meringuesuisse.com/shipping-returns</loc></url>
-<url><loc>https://meringuesuisse.com/privacy</loc></url>
-<url><loc>https://meringuesuisse.com/terms</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<url><loc>https://meringuesuisse.com/</loc><lastmod>2026-10-18</lastmod><priority>1.0</priority>
+ <image:image><image:loc>https://meringuesuisse.com/images/hero.jpg</image:loc></image:image>
+ <image:image><image:loc>https://meringuesuisse.com/images/gift-set.jpg</image:loc></image:image></url>
+<url><loc>https://meringuesuisse.com/shop</loc><lastmod>2026-10-18</lastmod><priority>0.9</priority>
+ <image:image><image:loc>https://meringuesuisse.com/images/box-open.jpg</image:loc></image:image>
+ <image:image><image:loc>https://meringuesuisse.com/images/box-closed.jpg</image:loc></image:image></url>
+<url><loc>https://meringuesuisse.com/story</loc><lastmod>2026-10-18</lastmod><priority>0.7</priority></url>
+<url><loc>https://meringuesuisse.com/contact</loc><lastmod>2026-10-18</lastmod><priority>0.5</priority></url>
+<url><loc>https://meringuesuisse.com/shipping-returns</loc><lastmod>2026-10-18</lastmod><priority>0.5</priority></url>
+<url><loc>https://meringuesuisse.com/privacy</loc><lastmod>2026-10-17</lastmod><priority>0.2</priority></url>
+<url><loc>https://meringuesuisse.com/terms</loc><lastmod>2026-10-18</lastmod><priority>0.2</priority></url>
 </urlset>

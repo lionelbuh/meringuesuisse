@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /stripe-checkout/
+Disallow: /README.md
+Disallow: /STRIPE-SETUP.md
+
 Sitemap: https://meringuesuisse.com/sitemap.xml
