@@ -46,6 +46,9 @@
       document.querySelectorAll(".thumbs button").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.src===m.src)});
     };
     fl.addEventListener("change",function(){showFlavor($('input[name=flavor]:checked').value)});
+    // load the flavor photos in the background so switching flavor is instant
+    var preload=function(){Object.keys(flavorImg).forEach(function(k){var i=new Image();i.src=flavorImg[k].src})};
+    if(document.readyState==="complete")preload();else window.addEventListener("load",preload);
     // preselect flavor from ?flavor=
     var p=new URLSearchParams(location.search).get("flavor");if(p&&$("#f-"+p)){$("#f-"+p).checked=true;showFlavor(p)}
     $("#add").onclick=function(){
