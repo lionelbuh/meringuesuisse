@@ -42,3 +42,8 @@ For real submissions, create a free Formspree form and paste its URL into `formE
 
 ## Still to fill in (yellow "to be added" notes on the site)
 Legal business name/address, permit details, ingredients, allergens, net weight, delivery times, shelf life, final Privacy/Terms review.
+
+## Browser cache
+Pages load `assets/style.css`, `config.js` and `site.js` with a `?v=YYYYMMDD` suffix. After changing one of
+those files, bump the number in every `.html` page so visitors get the new version immediately
+(otherwise browsers may keep the old file for up to 10 minutes).
