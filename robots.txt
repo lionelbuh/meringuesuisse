@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /stripe-checkout/
+Disallow: /promo-admin
 Disallow: /README.md
 Disallow: /STRIPE-SETUP.md
 

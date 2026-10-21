@@ -12,6 +12,9 @@ Follow **[STRIPE-SETUP.md](STRIPE-SETUP.md)**: create the Stripe account, deploy
 (`stripe-checkout/worker.js`, free on Cloudflare), then paste its URL into `checkoutEndpoint` in `assets/config.js`.
 Until then, the cart's **"Order on the Waiting List"** button shows a "payment link coming soon" note.
 
+## Free-box promo codes
+One-use codes for a free box (shipping still paid), managed in Stripe. Generate and export them at `/promo-admin`. See **[STRIPE-SETUP.md](STRIPE-SETUP.md#free-box-promo-codes-loyalty)**.
+
 ## Shipping
 Flat fee by number of boxes, set in `shippingTiers` in `assets/config.js` (and in `stripe-checkout/worker.js`):
 $9.90 for 1–2 boxes, $12.90 for 3–4, $14.90 for 5–7, free for 8 or more.

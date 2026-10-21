@@ -68,3 +68,38 @@ Worker prices are in cents: `1490` = $14.90.
 - Stripe fees are about 2.9% + $0.30 per card payment (check Stripe's pricing page).
 - California sales tax: plain bakery food is generally exempt, but confirm with the CDTFA or your
   accountant. If needed, Stripe Tax can be turned on later.
+
+## Free-box promo codes (loyalty)
+Each code gives **one free box** ($14.90 off the PETITES boxes only, so shipping is still paid),
+works **once**, and has **no expiry**. Stripe stores the codes, applies the discount and blocks
+reuse; the cart has a "Have a free-box code?" field and the Worker checks codes server-side.
+
+### One-time setup
+1. Re-deploy the Worker with the latest `stripe-checkout/worker.js` (Edit code → paste → Deploy).
+2. Worker → **Settings → Variables and Secrets → Add** → type *Secret*, name `ADMIN_TOKEN`,
+   value = a long random password (at least 16 characters, e.g. from a password manager) → Deploy.
+3. Open the Worker URL: it should show `"promoAdmin":"enabled"`.
+
+The first order or the first batch creates, in Stripe, three products (`ms_petites_classic`,
+`ms_petites_coffee`, `ms_petites_chocolate`) and the coupon **Free box (PETITES)**
+(`ms-free-box`). Don't delete or rename their IDs.
+
+### Generate and export codes
+1. Open `https://meringuesuisse.com/promo-admin` (private page, not linked anywhere).
+2. Enter the `ADMIN_TOKEN`, the number of codes (e.g. 100) and a batch label (e.g. `2026-11`).
+3. **Generate & download CSV** → `free-box-codes-<batch>.csv` (`code, status, times_redeemed, batch, created`).
+   Keep this file private: each code is worth a free box.
+4. **Download status CSV** at any time to see which codes are available, used or disabled.
+5. To disable a code: Stripe → **Product catalog → Coupons → Free box (PETITES) → Promotion codes** → the code → Archive.
+
+The page shows whether the Worker is in TEST or LIVE mode. Test-mode codes don't work in live mode:
+generate the real batch after switching the Worker to the `sk_live_` key.
+
+### Test before using real codes (Stripe test mode, card 4242 4242 4242 4242)
+- 1 box + code → you pay **$9.90** (shipping only).
+- 3 boxes + code → **$29.80 + $12.90 shipping** (exactly one box free).
+- The same code again after a paid order → refused.
+- A made-up code → refused. An order without a code → unchanged.
+- **Two tabs, same unused code, open both payment pages and pay both** → only one should go through.
+  If both succeed, tell Claude: a small lock can be added in the Worker (free).
+- Check the status CSV: the codes you used show `used`.

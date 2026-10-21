@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Promo codes | Meringue Suisse</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/style.css?v=2026102102">
+<style>
+.admin{max-width:40rem;margin:0 auto;padding:3rem 1.25rem 5rem}
+.admin .field{margin-top:1.2rem}.admin label{display:block;font-size:.9rem;margin-bottom:.35rem}
+.admin .btn-row{margin-top:1.6rem}
+.admin table{width:100%;border-collapse:collapse;margin-top:1.5rem;font-size:.9rem}
+.admin th,.admin td{text-align:left;padding:.4rem .5rem;border-bottom:1px solid var(--line)}
+.admin .mode{display:inline-block;padding:.2rem .6rem;border:1px solid var(--ink-soft);font-size:.85rem}
+#log{margin-top:1.2rem;white-space:pre-wrap}
+</style>
+</head><body>
+<main class="admin">
+<h1 style="font-size:2rem;letter-spacing:.08em">FREE-BOX CODES</h1>
+<p class="fine">Private page. Codes are created in Stripe: each one gives one free box (shipping still paid) and works once. <span id="mode" class="mode">checking…</span></p>
+
+<div class="field"><label for="token">Admin token</label><input id="token" type="password" autocomplete="current-password"></div>
+
+<h2 style="font-size:1.4rem;margin-top:2.4rem">Generate a batch</h2>
+<div class="field"><label for="count">Number of codes</label><input id="count" type="number" min="1" max="500" value="100"></div>
+<div class="field"><label for="batch">Batch label</label><input id="batch" maxlength="40"></div>
+<div class="btn-row"><button class="btn" id="gen" type="button">Generate &amp; download CSV</button></div>
+
+<h2 style="font-size:1.4rem;margin-top:2.4rem">Status of all codes</h2>
+<div class="btn-row"><button class="btn ghost" id="status" type="button">Download status CSV</button></div>
+
+<p class="fine" id="log" role="status"></p>
+<div id="table"></div>
+<p class="fine" style="margin-top:2rem">To disable a code: Stripe → Product catalog → Coupons → <em>Free box (PETITES)</em> → Promotion codes.</p>
+</main>
+<script src="assets/config.js?v=2026102102"></script>
+<script>
+(function(){
+  var E=window.SITE.checkoutEndpoint,$=function(s){return document.querySelector(s)},log=$("#log");
+  var tok=$("#token");try{tok.value=sessionStorage.getItem("ms_admin")||""}catch(e){}
+  $("#batch").value=new Date().toISOString().slice(0,10);
+  fetch(E).then(function(r){return r.json()}).then(function(d){
+    var k=d.stripeKey||"";$("#mode").textContent=k.indexOf("test")===0?"TEST mode (sk_test)":k.indexOf("live")===0?"LIVE mode (sk_live)":k;
+    if(String(d.promoAdmin||"").indexOf("enabled")!==0)log.textContent="Admin is disabled: add the ADMIN_TOKEN secret to the Worker.";
+  }).catch(function(){$("#mode").textContent="worker unreachable"});
+  function call(body){
+    try{sessionStorage.setItem("ms_admin",tok.value)}catch(e){}
+    return fetch(E,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+tok.value},body:JSON.stringify(body)})
+      .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.error||("HTTP "+r.status));return d})});
+  }
+  function csv(rows){
+    var h=["code","status","times_redeemed","batch","created"];
+    return h.join(",")+"\n"+rows.map(function(r){return h.map(function(k){return '"'+String(r[k]==null?"":r[k]).replace(/"/g,'""')+'"'}).join(",")}).join("\n")+"\n";
+  }
+  function download(name,text){
+    var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([text],{type:"text/csv"}));a.download=name;document.body.appendChild(a);a.click();a.remove();
+  }
+  function table(rows){
+    var c={available:0,used:0,disabled:0};rows.forEach(function(r){c[r.status]=(c[r.status]||0)+1});
+    $("#table").innerHTML="<p><strong>"+rows.length+"</strong> codes · "+c.available+" available · "+c.used+" used · "+c.disabled+" disabled</p>";
+  }
+  $("#gen").onclick=function(){
+    var total=Math.max(1,Math.min(500,parseInt($("#count").value)||0)),batch=$("#batch").value.trim(),done=[],btn=this;
+    if(!confirm("Create "+total+" new codes in Stripe ("+$("#mode").textContent+")?"))return;
+    btn.disabled=true;
+    (function next(){
+      var n=Math.min(20,total-done.length);
+      if(n<=0){btn.disabled=false;log.textContent="Done: "+done.length+" codes created.";table(done);download("free-box-codes-"+(batch||"batch")+".csv",csv(done));return}
+      log.textContent="Creating codes… "+done.length+" / "+total;
+      call({action:"admin-generate",count:n,batch:batch}).then(function(d){done=done.concat(d.codes);next()})
+        .catch(function(e){btn.disabled=false;log.textContent="Error: "+e.message+(done.length?" ("+done.length+" codes created; downloading them)":"");if(done.length)download("free-box-codes-"+(batch||"batch")+"-partial.csv",csv(done))});
+    })();
+  };
+  $("#status").onclick=function(){
+    var btn=this;btn.disabled=true;log.textContent="Loading…";
+    call({action:"admin-status"}).then(function(d){table(d.codes);log.textContent="";download("free-box-codes-status-"+new Date().toISOString().slice(0,10)+".csv",csv(d.codes))})
+      .catch(function(e){log.textContent="Error: "+e.message}).then(function(){btn.disabled=false});
+  };
+})();
+</script>
+</body></html>
