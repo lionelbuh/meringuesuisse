@@ -34,8 +34,20 @@
     var q=$("#qty");
     $("#minus").onclick=function(){q.value=Math.max(1,+q.value-1)};
     $("#plus").onclick=function(){q.value=Math.min(20,+q.value+1)};
+    // flavor photo + subtitle follow the selected flavor
+    var flavorImg={
+      classic:{src:"images/hero.jpg",alt:"Kraft box of nine classic Swiss meringues in sage-green cups"},
+      coffee:{src:"images/coffee.jpg",alt:"Kraft box of nine coffee meringues tied with twine, beside coffee beans and an espresso",pos:"25% 50%"},
+      chocolate:{src:"images/chocolate.jpg",alt:"Kraft box of nine chocolate meringues tied with twine, beside pieces of dark chocolate",pos:"25% 50%"}
+    };
+    var showFlavor=function(id){
+      var f=flavor(id),line=$("#flavor-line");if(f&&line)line.textContent=f.name+" Swiss Meringue";
+      var m=flavorImg[id];if(!m)return;var im=$("#main-img");im.src=m.src;im.alt=m.alt;im.style.objectPosition=m.pos||"";
+      document.querySelectorAll(".thumbs button").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.src===m.src)});
+    };
+    fl.addEventListener("change",function(){showFlavor($('input[name=flavor]:checked').value)});
     // preselect flavor from ?flavor=
-    var p=new URLSearchParams(location.search).get("flavor");if(p&&$("#f-"+p)){$("#f-"+p).checked=true;var gi=$("[data-img='"+p+"']");if(gi)gi.click()}
+    var p=new URLSearchParams(location.search).get("flavor");if(p&&$("#f-"+p)){$("#f-"+p).checked=true;showFlavor(p)}
     $("#add").onclick=function(){
       var c=load(),s=$('input[name=size]:checked').value,f=$('input[name=flavor]:checked').value,n=Math.max(1,Math.min(20,parseInt(q.value)||1));
       var ex=c.find(function(l){return l.size===s&&l.flavor===f});
@@ -43,7 +55,7 @@
       save(c);var m=$("#added");m.classList.add("show");m.focus&&m.focus();
     };
     document.querySelectorAll(".thumbs button").forEach(function(b){b.onclick=function(){
-      $("#main-img").src=b.dataset.src;$("#main-img").alt=b.dataset.alt;
+      $("#main-img").src=b.dataset.src;$("#main-img").alt=b.dataset.alt;$("#main-img").style.objectPosition="";
       document.querySelectorAll(".thumbs button").forEach(function(x){x.setAttribute("aria-pressed",x===b)})}});
   }
 
