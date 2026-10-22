@@ -157,7 +157,7 @@ footer h4{font:500 .8rem var(--sans);letter-spacing:.2em;text-transform:uppercas
 .buy p{color:var(--ink-soft);margin-top:1rem}
 .opts{margin:1.8rem 0}
 .chips{display:flex;gap:.6rem;flex-wrap:wrap}
-.chips input{position:absolute;opacity:0}
+.chips{position:relative}.chips input{position:absolute;opacity:0;width:1px;height:1px;margin:0;padding:0;border:0;pointer-events:none}
 .chips label{margin:0;border:1px solid var(--ink-soft);padding:.65rem 1.2rem;cursor:pointer;color:var(--ink);font-size:.98rem}
 .chips input:checked+label{background:var(--ink);color:var(--ivory);border-color:var(--ink)}
 .chips input:focus-visible+label{outline:2px solid var(--sage-deep);outline-offset:3px}
