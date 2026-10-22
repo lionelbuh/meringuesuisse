@@ -16,7 +16,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026102203">
+<link rel="stylesheet" href="assets/style.css?v=2026102301">
 </head><body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header"><div class="wrap nav">
@@ -30,7 +30,7 @@
  <div id="lines"></div>
  <aside class="summary" id="summary" hidden>
   <h3>Order summary</h3>
-  <fieldset class="delivery" id="delivery">
+  <fieldset class="delivery open-only" id="delivery">
    <legend>Delivery</legend>
    <label class="opt"><input type="radio" name="delivery" value="ship" checked> Shipping in California (USPS Ground)</label>
    <label class="opt"><input type="radio" name="delivery" value="local"> Free local delivery, Temecula area</label>
@@ -38,15 +38,20 @@
   </fieldset>
   <dl><dt>Subtotal</dt><dd id="sub">$0.00</dd><dt id="disc-dt" hidden>Free box</dt><dd id="disc" hidden>Free</dd><dt>Shipping</dt><dd id="ship">—</dd><dt class="total">Total</dt><dd class="total" id="total">—</dd></dl>
   <p class="fine" id="ship-hint" style="margin:-.6rem 0 1.2rem"></p>
-  <div class="promo" id="promo-box" hidden>
+  <div class="promo open-only" id="promo-box" hidden>
    <label for="promo">Have a free-box code?</label>
    <div class="promo-row"><input id="promo" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="PETITES-XXXXXX" maxlength="40"><button class="btn ghost" id="promo-apply" type="button">Apply</button></div>
    <div id="free-pick" hidden><p class="fine" style="margin:.2rem 0 .4rem">Choose your free box:</p><div class="chips" id="free-flavors"></div></div>
    <p class="fine" id="promo-msg" role="status"></p>
   </div>
-  <button class="btn" id="checkout" type="button">Order on the Waiting List</button>
+  <button class="btn open-only" id="checkout" type="button">Checkout</button>
+  <div class="closed-only waitlist">
+   <p class="wait" style="margin-top:0"><strong>Permit pending.</strong> We are waiting for our cottage food permit from Riverside County, so we can't take orders or payments yet. Join the waiting list and we'll email you as soon as ordering opens.</p>
+   <form data-form="waitlist" id="wl-cart"><input type="hidden" name="_subject" value="Waiting list sign-up"><input type="hidden" name="interest"><label for="wl-cart-email" class="skip">Email address</label><input id="wl-cart-email" name="email" type="email" required placeholder="Your email address" autocomplete="email"><button class="btn" type="submit" style="width:100%">Join the waiting list</button></form>
+   <div class="ok" role="status">Thank you! You're on the waiting list. We'll email you as soon as ordering opens.</div>
+  </div>
   <div class="ok" id="soon" role="status">Our secure payment link is coming very soon. In the meantime, <a href="/contact">get in touch</a> and we'll keep your place.</div>
-  <p class="wait"><strong>Order on the Waiting List.</strong> We currently accept advance orders only, before going to market. Flat-rate shipping: $9.90 for 1 to 2 boxes, $12.90 for 3 to 4 boxes, $14.90 for 5 to 7 boxes, and free for 8 boxes or more. Free local delivery in the Temecula area. Each order is made for you: allow 3–5 business days, plus 2–5 business days for USPS delivery.</p>
+  <p class="wait open-only">Flat-rate shipping: $9.90 for 1 to 2 boxes, $12.90 for 3 to 4 boxes, $14.90 for 5 to 7 boxes, and free for 8 boxes or more. Free local delivery in the Temecula area. Each order is made for you: allow 3–5 business days, plus 2–5 business days for USPS delivery.</p>
  </aside>
 </div></section>
 </main>
@@ -65,6 +70,6 @@
 <p style="margin-top:.5rem">Ingredients, allergens and net weight are listed on each product page.</p></div>
 </div></footer>
 <script>document.getElementById("yr").textContent=new Date().getFullYear()</script>
-<script src="assets/config.js?v=2026102203"></script><script src="assets/site.js?v=2026102203"></script>
+<script src="assets/config.js?v=2026102301"></script><script src="assets/site.js?v=2026102301"></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d83dcca4d8484fac94c0cab27d64881f"}'></script><!-- End Cloudflare Web Analytics -->
 </body></html>

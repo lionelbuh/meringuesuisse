@@ -1,5 +1,6 @@
 (function(){
   var S=window.SITE, KEY="ms_cart_v1";
+  if(S.salesOpen)document.documentElement.classList.add("sales-open");
   var $=function(s,r){return (r||document).querySelector(s)};
   var money=function(n){return "$"+Number(n).toFixed(2)};
   var load=function(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
@@ -141,7 +142,7 @@
     var btn=$("#checkout");btn.textContent=S.checkoutLabel;
     btn.addEventListener("click",function(){
       var m=$("#soon");
-      if(!S.checkoutEndpoint){m.classList.add("show");return}
+      if(!S.salesOpen||!S.checkoutEndpoint){m.classList.add("show");return}
       var label=btn.textContent;btn.disabled=true;btn.textContent="Redirecting to secure payment…";
       var fail=function(why){btn.disabled=false;btn.textContent=label;m.innerHTML='Sorry, we could not open the payment page. Please try again or <a href="/contact">contact us</a>.<br><small style="opacity:.7">'+esc(String(why||""))+'</small>';m.classList.add("show");if(window.console)console.error("Checkout failed:",why)};
       var pr=promo(),dv=delivery(),payload={items:load()};if(pr){payload.promo=pr.code;payload.freeFlavor=pr.flavor}
@@ -165,12 +166,17 @@
     form.addEventListener("submit",function(e){
       e.preventDefault();
       var ok=form.parentElement.querySelector(".ok")||form.querySelector(".ok");
+      if(form.dataset.form==="waitlist"){ // remember what they were interested in
+        var it=form.querySelector('input[name=interest]');
+        if(it){var fsel=$('input[name=flavor]:checked');var parts=load().map(function(l){var f=flavor(l.flavor);return l.qty+" x "+(f?f.name:l.flavor)});
+          it.value=fsel?("Shop: "+flavor(fsel.value).name+" x "+(parseInt(($("#qty")||{}).value)||1)):(parts.join(", ")||"-")}
+      }
       var data=new FormData(form),kind=form.dataset.form;
       var done=function(){form.reset();if(ok)ok.classList.add("show")};
       if(S.formEndpoint){
         fetch(S.formEndpoint,{method:"POST",body:data,headers:{Accept:"application/json"}}).then(function(r){if(r.ok)done();else alert("Something went wrong. Please email "+S.contactEmail)}).catch(function(){alert("Something went wrong. Please email "+S.contactEmail)});
       }else{
-        var subj=kind==="contact"?(data.get("subject")||"Message from the website"):"Newsletter sign-up";
+        var subj=kind==="contact"?(data.get("subject")||"Message from the website"):kind==="waitlist"?"Waiting list sign-up":"Newsletter sign-up";
         var body=kind==="contact"?"Name: "+data.get("name")+"\nEmail: "+data.get("email")+"\n\n"+data.get("message"):"Please add me to the Meringue Suisse list: "+data.get("email");
         window.location.href="mailto:"+S.contactEmail+"?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
         done();

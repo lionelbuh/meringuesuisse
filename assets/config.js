@@ -9,8 +9,13 @@ window.SITE = {
   // While empty, the checkout button shows a friendly "payment link coming soon" note.
   checkoutEndpoint: "https://meringuesuisse-checkout.buhler-lionel.workers.dev",
 
-  // Label of the checkout button (advance orders only, before market launch).
-  checkoutLabel: "Order on the Waiting List",
+  // SALES SWITCH. false = permit pending: no cart checkout or payment, the shop and cart
+  // show a "join the waiting list" form instead. Set to true (and SALES_OPEN=true in the
+  // Cloudflare Worker) once the Riverside County permit is received.
+  salesOpen: false,
+
+  // Label of the checkout button when sales are open.
+  checkoutLabel: "Checkout",
 
   // ---- Forms ---------------------------------------------------------------
   // Optional: a Formspree (or similar) endpoint, e.g. "https://formspree.io/f/xxxxxxx".

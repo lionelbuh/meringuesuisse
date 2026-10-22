@@ -120,6 +120,8 @@ label{display:block;font-size:.9rem;color:var(--ink-soft);margin-bottom:.35rem}
 .field{margin-bottom:1.3rem}
 .ok{display:none;margin-top:1.2rem;padding:1rem 1.2rem;background:var(--sage-soft);border-left:3px solid var(--sage-deep);text-align:left}
 .ok.show{display:block}
+html:not(.sales-open) .open-only{display:none!important}html.sales-open .closed-only{display:none!important}
+.waitlist form{display:grid;gap:.6rem;margin-top:1rem}
 .fine{font-size:.85rem;color:var(--ink-soft);margin-top:1rem}
 
 /* footer */

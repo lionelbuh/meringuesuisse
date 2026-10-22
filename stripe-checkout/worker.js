@@ -8,6 +8,9 @@
      STRIPE_SECRET_KEY   sk_test_... while testing, sk_live_... when live
      ADMIN_TOKEN         long random password for the promo-code admin page
                          (optional: without it, the admin actions are disabled)
+   Variable (plain text):
+     SALES_OPEN          "true" to accept orders and payments. Missing or anything else = closed
+                         (permit pending): the payment page is never created.
 
    Requests (POST, JSON body):
      { items, promo? }                       → { url }   create the payment page
@@ -80,6 +83,7 @@ export default {
           : key.startsWith("sk_live_") ? "live key ok"
           : key.startsWith("rk_") ? "restricted key - use the Secret key (sk_...) instead"
           : "WRONG KEY - it must start with sk_test_ or sk_live_ (not pk_)",
+        sales: env.SALES_OPEN === "true" ? "open" : "closed (add the variable SALES_OPEN = true to accept orders)",
         promoAdmin: !String(env.ADMIN_TOKEN || "").trim() ? "disabled (add the ADMIN_TOKEN secret to enable)"
           : String(env.ADMIN_TOKEN).trim().length < 16 ? "disabled: ADMIN_TOKEN is shorter than 16 characters"
           : "enabled"
@@ -109,6 +113,7 @@ export default {
         await ensureCatalog(stripe);
         return json({ codes: await generateCodes(stripe, count, batch) });
       }
+      if (env.SALES_OPEN !== "true") return json({ error: "Ordering is not open yet: our permit is pending." }, 403);
       return await checkout(stripe, body, json);
     } catch (e) {
       console.error("Worker error", e && e.message);
