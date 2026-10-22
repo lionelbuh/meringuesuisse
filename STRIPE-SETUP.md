@@ -70,8 +70,10 @@ Worker prices are in cents: `1490` = $14.90.
   accountant. If needed, Stripe Tax can be turned on later.
 
 ## Free-box promo codes (loyalty)
-Each code gives **one free box** ($14.90 off the PETITES boxes only, so shipping is still paid),
-works **once**, and has **no expiry**. Stripe stores the codes, applies the discount and blocks
+Each code **adds one free box** (flavor chosen by the customer) to an order of at least one paid box.
+Shipping is charged on the paid boxes only. A code works **once** and has **no expiry**.
+Technically the Worker adds the extra box to the Stripe order and the $14.90 coupon (limited to the
+PETITES products, never shipping) cancels exactly that box. Stripe stores the codes, applies the discount and blocks
 reuse; the cart has a "Have a free-box code?" field and the Worker checks codes server-side.
 
 ### One-time setup
@@ -96,8 +98,8 @@ The page shows whether the Worker is in TEST or LIVE mode. Test-mode codes don't
 generate the real batch after switching the Worker to the `sk_live_` key.
 
 ### Test before using real codes (Stripe test mode, card 4242 4242 4242 4242)
-- 1 box + code → you pay **$9.90** (shipping only).
-- 3 boxes + code → **$29.80 + $12.90 shipping** (exactly one box free).
+- 1 box + code → you receive **2 boxes** and pay **$14.90 + $9.90 shipping**.
+- 2 boxes + code → you receive **3 boxes** and pay **$29.80 + $9.90 shipping** (shipping on the 2 paid boxes).
 - The same code again after a paid order → refused.
 - A made-up code → refused. An order without a code → unchanged.
 - **Two tabs, same unused code, open both payment pages and pay both** → only one should go through.

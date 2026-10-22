@@ -16,7 +16,7 @@
 <link rel="manifest" href="/site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css?v=2026102202">
+<link rel="stylesheet" href="assets/style.css?v=2026102203">
 </head><body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-header"><div class="wrap nav">
@@ -36,11 +36,12 @@
    <label class="opt"><input type="radio" name="delivery" value="local"> Free local delivery, Temecula area</label>
    <div id="local-zip" hidden><label for="zip" class="skip">ZIP code</label><input id="zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="Your ZIP code"><p class="fine" id="zip-msg" role="status"></p></div>
   </fieldset>
-  <dl><dt>Subtotal</dt><dd id="sub">$0.00</dd><dt id="disc-dt" hidden>Free box</dt><dd id="disc" hidden>—</dd><dt>Shipping</dt><dd id="ship">—</dd><dt class="total">Total</dt><dd class="total" id="total">—</dd></dl>
+  <dl><dt>Subtotal</dt><dd id="sub">$0.00</dd><dt id="disc-dt" hidden>Free box</dt><dd id="disc" hidden>Free</dd><dt>Shipping</dt><dd id="ship">—</dd><dt class="total">Total</dt><dd class="total" id="total">—</dd></dl>
   <p class="fine" id="ship-hint" style="margin:-.6rem 0 1.2rem"></p>
   <div class="promo" id="promo-box" hidden>
    <label for="promo">Have a free-box code?</label>
    <div class="promo-row"><input id="promo" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="PETITES-XXXXXX" maxlength="40"><button class="btn ghost" id="promo-apply" type="button">Apply</button></div>
+   <div id="free-pick" hidden><p class="fine" style="margin:.2rem 0 .4rem">Choose your free box:</p><div class="chips" id="free-flavors"></div></div>
    <p class="fine" id="promo-msg" role="status"></p>
   </div>
   <button class="btn" id="checkout" type="button">Order on the Waiting List</button>
@@ -64,6 +65,6 @@
 <p style="margin-top:.5rem">Ingredients, allergens and net weight are listed on each product page.</p></div>
 </div></footer>
 <script>document.getElementById("yr").textContent=new Date().getFullYear()</script>
-<script src="assets/config.js?v=2026102202"></script><script src="assets/site.js?v=2026102202"></script>
+<script src="assets/config.js?v=2026102203"></script><script src="assets/site.js?v=2026102203"></script>
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d83dcca4d8484fac94c0cab27d64881f"}'></script><!-- End Cloudflare Web Analytics -->
 </body></html>

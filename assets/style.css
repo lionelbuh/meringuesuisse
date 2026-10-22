@@ -181,6 +181,7 @@ details p{margin-top:.7rem;font-size:.97rem}
 .summary .btn{width:100%;text-align:center}
 .delivery{border:0;padding:0;margin:1rem 0 0}.delivery legend{font-size:.9rem;margin-bottom:.4rem;padding:0}
 .delivery .opt{display:flex;gap:.55rem;align-items:center;font-size:.95rem;margin:.35rem 0;cursor:pointer}.delivery .opt input{width:auto;accent-color:var(--ink)}
+#free-pick{margin:.2rem 0 .6rem}#free-pick .chips label{padding:.45rem .9rem;font-size:.9rem}
 #local-zip{margin:.5rem 0 0}#local-zip input{padding:.6rem .8rem}#local-zip .fine{margin-top:.4rem}
 .promo{margin:0 0 1.4rem}.promo label{display:block;font-size:.9rem;margin-bottom:.4rem}
 .promo-row{display:flex;gap:.5rem}.promo-row[hidden]{display:none}.promo-row input{flex:1;min-width:0;padding:.7rem .8rem;text-transform:uppercase}

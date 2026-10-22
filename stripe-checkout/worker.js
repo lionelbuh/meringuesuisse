@@ -168,6 +168,15 @@ async function checkout(stripe, body, json) {
     // Validate server-side; Stripe checks the code again when the payment completes.
     const promo = await findFreeBoxCode(stripe, body.promo);
     if (!promo) return json({ error: "This code is not valid or has already been used.", promoInvalid: true }, 400);
+    // The code ADDS one box of the customer's chosen flavor; the $14.90 coupon cancels exactly that box.
+    // Shipping was already set from the paid boxes above, so the free box never raises it.
+    const free = FLAVORS[body.freeFlavor] ? body.freeFlavor : "classic";
+    params.append(`line_items[${i}][quantity]`, 1);
+    params.append(`line_items[${i}][price_data][currency]`, CURRENCY);
+    params.append(`line_items[${i}][price_data][unit_amount]`, SIZES["box-9"].price);
+    params.append(`line_items[${i}][price_data][product]`, PRODUCT_ID(free));
+    i++;
+    params.append("metadata[free_box]", FLAVORS[free]);
     params.append("discounts[0][promotion_code]", promo.id);
     params.append("metadata[promo_code]", promo.code);
     // Short-lived page keeps the window for parallel use of one code small (min allowed is 30 min).
