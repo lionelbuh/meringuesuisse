@@ -73,20 +73,39 @@
       box.innerHTML=c.map(function(l,i){var s=size(l.size),f=flavor(l.flavor);if(!s||!f)return"";sub+=s.price*l.qty;
         return '<div class="line"><img src="'+(imgFor[l.flavor]||"images/closeup.jpg")+'" alt=""><div><h3>'+esc(S.product.name)+' — '+esc(f.name)+'</h3><div class="meta">'+esc(s.label)+' · '+money(s.price)+' each</div><button class="rm" data-i="'+i+'">Remove</button></div><div class="qty" aria-label="Quantity"><button data-d="-1" data-i="'+i+'" aria-label="Decrease">−</button><input value="'+l.qty+'" readonly aria-label="Quantity"><button data-d="1" data-i="'+i+'" aria-label="Increase">+</button></div></div>'}).join("");
       $("#sub").textContent=money(sub);
-      var n=boxes(c),ship=shipping(n),pr=promo(),disc=pr?Math.min(pr.amount/100,sub):0;
+      var n=boxes(c),ship=shipping(n),pr=promo(),disc=pr?Math.min(pr.amount/100,sub):0,dv=delivery(),isLocal=dv.method==="local"&&localOk(dv.zip);
+      if(isLocal)ship=0;
       $("#disc-dt").hidden=$("#disc").hidden=!pr;if(pr){$("#disc-dt").textContent=pr.label+" ("+pr.code+")";$("#disc").textContent="−"+money(disc)}
-      $("#ship").textContent=ship==null?"Calculated at confirmation":ship===0?"Free":money(ship);
+      $("#ship").textContent=isLocal?"Free (local delivery)":ship==null?"Calculated at confirmation":ship===0?"Free":money(ship);
+      renderDelivery();
       $("#total").textContent=ship==null?money(sub-disc)+" + shipping":money(sub-disc+ship);
       renderPromo();
       var hint=$("#ship-hint"),T=S.shippingTiers||[],fi=T.findIndex(function(t){return t.price===0});
       if(hint){var left=fi>0?T[fi-1].maxBoxes+1-n:0;
-        hint.textContent=ship===0?"Your order ships free.":left>0?"Add "+left+" more box"+(left>1?"es":"")+" for free shipping.":"";}
+        hint.textContent=isLocal?"":ship===0?"Your order ships free.":left>0?"Add "+left+" more box"+(left>1?"es":"")+" for free shipping.":"";}
     };
     cartEl.addEventListener("click",function(e){
       var t=e.target,i=t.dataset.i;if(i==null)return;var c=load();
       if(t.classList.contains("rm"))c.splice(i,1);else if(t.dataset.d){c[i].qty=Math.max(1,Math.min(20,c[i].qty+ +t.dataset.d))}
       save(c);render();
     });
+    // ---- delivery method: USPS shipping or free local delivery (ZIP checked again by the worker)
+    var DKEY="ms_delivery_v1",LD=S.localDelivery||{zips:[]};
+    var delivery=function(){try{return JSON.parse(sessionStorage.getItem(DKEY))||{method:"ship"}}catch(e){return{method:"ship"}}};
+    var setDelivery=function(d){try{sessionStorage.setItem(DKEY,JSON.stringify(d))}catch(e){}};
+    var localOk=function(z){return LD.zips.indexOf(String(z||"").trim())>=0};
+    var dbox=$("#delivery"),zipIn=$("#zip"),zipMsg=$("#zip-msg");
+    var renderDelivery=function(){
+      if(!dbox)return;var d=delivery();if(!LD.zips.length){dbox.hidden=true;return}
+      dbox.querySelector('input[value="'+(d.method==="local"?"local":"ship")+'"]').checked=true;
+      $("#local-zip").hidden=d.method!=="local";
+      if(d.method==="local"&&document.activeElement!==zipIn)zipIn.value=d.zip||"";
+      zipMsg.textContent=d.method!=="local"?"":!d.zip?"Enter your ZIP code to check local delivery.":localOk(d.zip)?"Great, we deliver to your door for free.":"Sorry, ZIP "+d.zip+" is outside our local area. Please choose shipping.";
+    };
+    if(dbox){
+      dbox.addEventListener("change",function(e){if(e.target.name==="delivery"){var d=delivery();d.method=e.target.value;setDelivery(d);render();if(d.method==="local")zipIn.focus()}});
+      zipIn.addEventListener("input",function(){var z=zipIn.value.replace(/\D/g,"").slice(0,5);zipIn.value=z;var d=delivery();d.zip=z;setDelivery(d);if(z.length===5||!z)render()});
+    }
     // ---- free-box promo code (validated by the checkout worker, applied by Stripe)
     var PKEY="ms_promo_v1";
     var promo=function(){try{return JSON.parse(sessionStorage.getItem(PKEY))}catch(e){return null}};
@@ -118,11 +137,13 @@
       if(!S.checkoutEndpoint){m.classList.add("show");return}
       var label=btn.textContent;btn.disabled=true;btn.textContent="Redirecting to secure payment…";
       var fail=function(why){btn.disabled=false;btn.textContent=label;m.innerHTML='Sorry, we could not open the payment page. Please try again or <a href="/contact">contact us</a>.<br><small style="opacity:.7">'+esc(String(why||""))+'</small>';m.classList.add("show");if(window.console)console.error("Checkout failed:",why)};
-      var pr=promo(),payload={items:load()};if(pr)payload.promo=pr.code;
+      var pr=promo(),dv=delivery(),payload={items:load()};if(pr)payload.promo=pr.code;
+      if(dv.method==="local"){if(!localOk(dv.zip)){btn.disabled=false;btn.textContent=label;render();zipIn.focus();return}payload.delivery={method:"local",zip:dv.zip}}
       fetch(S.checkoutEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)})
         .then(function(r){return r.text().then(function(t){try{return JSON.parse(t)}catch(e){throw new Error("Unexpected reply from checkout ("+r.status+"): "+t.slice(0,80))}})})
         .then(function(d){
           if(d&&d.url){window.location.href=d.url;return}
+          if(d&&d.deliveryInvalid){setDelivery({method:"ship"});render();btn.disabled=false;btn.textContent=label;m.textContent=d.error;m.classList.add("show");return}
           if(d&&d.promoInvalid){setPromo(null);render();btn.disabled=false;btn.textContent=label;pmsg.textContent=d.error;return}
           fail(d&&d.error)}).catch(function(e){fail(e&&e.message)});
     });

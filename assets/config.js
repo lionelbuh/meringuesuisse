@@ -29,6 +29,12 @@ window.SITE = {
     { maxBoxes: 7,    price: 14.90 },   // 5 to 7 boxes: heavier parcel
     { maxBoxes: null, price: 0     }    // 8+ boxes: free shipping
   ],
+  // Free local delivery (left at the front door) for these ZIP codes:
+  // Temecula, Murrieta, Wildomar, French Valley. Keep in sync with stripe-checkout/worker.js.
+  localDelivery: {
+    label: "Free local delivery (Temecula area)",
+    zips: ["92590", "92591", "92592", "92593", "92562", "92563", "92564", "92595", "92596"]
+  },
 
   // ---- Products ------------------------------------------------------------
   currency: "USD",

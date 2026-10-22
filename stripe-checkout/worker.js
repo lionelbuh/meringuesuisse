@@ -48,6 +48,12 @@ const CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // no 0/O, 1/I/L
 const CODE_LENGTH = 6;
 const MAX_GENERATE_PER_CALL = 20; // stays under the Workers free-plan subrequest limit
 
+// Free local delivery (front door) — Temecula + ~10 miles. Keep in sync with assets/config.js.
+const LOCAL_ZIPS = ["92590", "92591", "92592", "92593", "92562", "92563", "92564", "92595", "92596"];
+// Delivery estimates shown on the Stripe page: 3–5 business days to make + USPS Ground Advantage 2–5.
+const ESTIMATE_SHIP = { min: 5, max: 10 };
+const ESTIMATE_LOCAL = { min: 3, max: 5 };
+
 const MAX_QTY_PER_LINE = 20;
 const MAX_BOXES = 60;
 
@@ -127,13 +133,29 @@ async function checkout(stripe, body, json) {
   }
   if (boxes > MAX_BOXES) return json({ error: "Order too large, please contact us" }, 400);
 
-  const tier = SHIPPING_TIERS.find(t => t.maxBoxes == null || boxes <= t.maxBoxes);
+  let tier = SHIPPING_TIERS.find(t => t.maxBoxes == null || boxes <= t.maxBoxes);
+  let estimate = ESTIMATE_SHIP, shipName = tier.name + " — USPS Ground";
+  const local = body.delivery && body.delivery.method === "local";
+  if (local) {
+    const zip = String(body.delivery.zip || "").trim().slice(0, 5);
+    if (!LOCAL_ZIPS.includes(zip))
+      return json({ error: "Free local delivery is only available in the Temecula area. Please choose shipping.", deliveryInvalid: true }, 400);
+    tier = { price: 0 }; estimate = ESTIMATE_LOCAL; shipName = `Free local delivery — Temecula area (${zip})`;
+    params.append("metadata[delivery]", "local");
+    params.append("metadata[local_zip]", zip);
+    params.append("custom_text[shipping_address][message]",
+      `Free local delivery: please enter your address in ZIP ${zip}. We leave the box at your front door.`);
+  }
   params.append("mode", "payment");
   params.append("success_url", `${SITE}/thank-you?session_id={CHECKOUT_SESSION_ID}`);
   params.append("cancel_url", `${SITE}/cart`);
   params.append("shipping_address_collection[allowed_countries][0]", "US");
   params.append("shipping_options[0][shipping_rate_data][type]", "fixed_amount");
-  params.append("shipping_options[0][shipping_rate_data][display_name]", tier.name);
+  params.append("shipping_options[0][shipping_rate_data][display_name]", shipName);
+  params.append("shipping_options[0][shipping_rate_data][delivery_estimate][minimum][unit]", "business_day");
+  params.append("shipping_options[0][shipping_rate_data][delivery_estimate][minimum][value]", estimate.min);
+  params.append("shipping_options[0][shipping_rate_data][delivery_estimate][maximum][unit]", "business_day");
+  params.append("shipping_options[0][shipping_rate_data][delivery_estimate][maximum][value]", estimate.max);
   params.append("shipping_options[0][shipping_rate_data][fixed_amount][amount]", tier.price);
   params.append("shipping_options[0][shipping_rate_data][fixed_amount][currency]", CURRENCY);
   params.append("phone_number_collection[enabled]", "true");
