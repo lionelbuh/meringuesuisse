@@ -80,7 +80,9 @@ export default {
           : key.startsWith("sk_live_") ? "live key ok"
           : key.startsWith("rk_") ? "restricted key - use the Secret key (sk_...) instead"
           : "WRONG KEY - it must start with sk_test_ or sk_live_ (not pk_)",
-        promoAdmin: env.ADMIN_TOKEN ? "enabled" : "disabled (add the ADMIN_TOKEN secret to enable)"
+        promoAdmin: !String(env.ADMIN_TOKEN || "").trim() ? "disabled (add the ADMIN_TOKEN secret to enable)"
+          : String(env.ADMIN_TOKEN).trim().length < 16 ? "disabled: ADMIN_TOKEN is shorter than 16 characters"
+          : "enabled"
       });
     }
     if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
@@ -98,7 +100,8 @@ export default {
         return json({ ok: true, code: promo.code, amount: FREE_BOX.amount, label: FREE_BOX.label });
       }
       if (body.action === "admin-generate" || body.action === "admin-status") {
-        if (!isAdmin(request, env)) return json({ error: "Unauthorized" }, 401);
+        const why = adminProblem(request, env);
+        if (why) return json({ error: why }, 401);
         if (body.action === "admin-status") return json({ codes: await listCodes(stripe) });
         const count = Math.floor(Number(body.count));
         if (!(count >= 1 && count <= MAX_GENERATE_PER_CALL)) return json({ error: `count must be 1-${MAX_GENERATE_PER_CALL}` }, 400);
@@ -311,11 +314,14 @@ function row(p) {
   };
 }
 
-function isAdmin(request, env) {
-  const token = env.ADMIN_TOKEN || "";
-  const got = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "");
-  if (token.length < 16 || got.length !== token.length) return false;
-  let diff = 0;
-  for (let i = 0; i < token.length; i++) diff |= token.charCodeAt(i) ^ got.charCodeAt(i);
-  return diff === 0;
+// Returns null when the request carries the right ADMIN_TOKEN, otherwise a message saying why not.
+function adminProblem(request, env) {
+  const token = String(env.ADMIN_TOKEN || "").trim();
+  if (!token) return "ADMIN_TOKEN secret is missing in the Worker (Settings → Variables and Secrets), then Deploy.";
+  if (token.length < 16) return "ADMIN_TOKEN in the Worker is too short: use at least 16 characters.";
+  const got = (request.headers.get("Authorization") || "").replace(/^Bearer\s+/i, "").trim();
+  if (!got) return "Enter the admin token.";
+  let diff = got.length ^ token.length;
+  for (let i = 0; i < token.length; i++) diff |= token.charCodeAt(i) ^ (got.charCodeAt(i) || 0);
+  return diff === 0 ? null : "Wrong admin token (it must match the ADMIN_TOKEN secret exactly, capitals included).";
 }

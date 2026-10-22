@@ -42,11 +42,11 @@
   $("#batch").value=new Date().toISOString().slice(0,10);
   fetch(E).then(function(r){return r.json()}).then(function(d){
     var k=d.stripeKey||"";$("#mode").textContent=k.indexOf("test")===0?"TEST mode (sk_test)":k.indexOf("live")===0?"LIVE mode (sk_live)":k;
-    if(String(d.promoAdmin||"").indexOf("enabled")!==0)log.textContent="Admin is disabled: add the ADMIN_TOKEN secret to the Worker.";
+    if(String(d.promoAdmin||"").indexOf("enabled")!==0)log.textContent="Admin "+(d.promoAdmin||"disabled: the Worker is not up to date, redeploy it.");
   }).catch(function(){$("#mode").textContent="worker unreachable"});
   function call(body){
     try{sessionStorage.setItem("ms_admin",tok.value)}catch(e){}
-    return fetch(E,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+tok.value},body:JSON.stringify(body)})
+    return fetch(E,{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+tok.value.trim()},body:JSON.stringify(body)})
       .then(function(r){return r.json().then(function(d){if(!r.ok)throw new Error(d.error||("HTTP "+r.status));return d})});
   }
   function csv(rows){
