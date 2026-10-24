@@ -34,6 +34,7 @@ Overwrite the file in `images/` using the same file name:
 | `story-card.jpg` | Story card (home gift row) |
 | `closeup.jpg` | Meringue close-up (shop gallery) |
 | `classic.jpg`, `coffee.jpg`, `chocolate.jpg` | Flavor cards and cart |
+| `choc-open.jpg`, `choc-tied.jpg`, `choc-closeup.jpg` | Shop gallery when Chocolate is selected |
 | `switzerland.jpg` | Swiss spirit band and Our Story page |
 | `share.jpg` | Link previews (1200 x 630, made from `gift-set.jpg`) |
 

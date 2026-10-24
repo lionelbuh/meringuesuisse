@@ -39,16 +39,27 @@
     var flavorImg={
       classic:{src:"images/hero.jpg",alt:"Kraft box of nine classic Swiss meringues in sage-green cups"},
       coffee:{src:"images/coffee.jpg",alt:"Kraft box of nine coffee meringues tied with twine, beside coffee beans and an espresso",pos:"25% 50%"},
-      chocolate:{src:"images/chocolate.jpg",alt:"Kraft box of nine chocolate meringues tied with twine, beside pieces of dark chocolate",pos:"25% 50%"}
+      chocolate:{src:"images/choc-open.jpg",alt:"Open kraft box of nine chocolate meringues dusted with cocoa",pos:"30% 50%",gallery:[
+        {src:"images/choc-open.jpg",alt:"Open kraft box of nine chocolate meringues dusted with cocoa",pos:"30% 50%"},
+        {src:"images/choc-tied.jpg",alt:"Box of chocolate meringues tied with twine and a Meringue Suisse tag",pos:"30% 50%"},
+        {src:"images/choc-closeup.jpg",alt:"Close-up of a chocolate meringue dusted with cocoa",pos:"50% 50%"},
+        {src:"images/chocolate.jpg",alt:"Chocolate meringues in their box beside pieces of dark chocolate and an espresso",pos:"25% 50%"}]}
+    };
+    // small photos under the main photo: per-flavor set when defined, else the default set
+    var thumbsEl=$(".thumbs"),defaultThumbs=thumbsEl?thumbsEl.innerHTML:"";
+    var setMain=function(g){var im=$("#main-img");im.src=g.src;im.alt=g.alt;im.style.objectPosition=g.pos||""};
+    var setGallery=function(list){
+      if(!thumbsEl)return;
+      thumbsEl.innerHTML=list?list.map(function(g,i){return '<button type="button" aria-pressed="'+(i===0)+'" data-src="'+g.src+'" data-alt="'+esc(g.alt)+'" data-pos="'+(g.pos||"")+'"><img src="'+g.src+'" alt="Show photo '+(i+1)+'"'+(g.pos?' style="object-position:'+g.pos+'"':'')+'></button>'}).join(""):defaultThumbs;
     };
     var showFlavor=function(id){
       var f=flavor(id),line=$("#flavor-line");if(f&&line)line.textContent=f.name+" Swiss Meringue";
-      var m=flavorImg[id];if(!m)return;var im=$("#main-img");im.src=m.src;im.alt=m.alt;im.style.objectPosition=m.pos||"";
+      var m=flavorImg[id];if(!m)return;setGallery(m.gallery);setMain(m);
       document.querySelectorAll(".thumbs button").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.src===m.src)});
     };
     fl.addEventListener("change",function(){showFlavor($('input[name=flavor]:checked').value)});
     // load the flavor photos in the background so switching flavor is instant
-    var preload=function(){Object.keys(flavorImg).forEach(function(k){var i=new Image();i.src=flavorImg[k].src})};
+    var preload=function(){Object.keys(flavorImg).forEach(function(k){[flavorImg[k]].concat(flavorImg[k].gallery||[]).forEach(function(g){var i=new Image();i.src=g.src})})};
     if(document.readyState==="complete")preload();else window.addEventListener("load",preload);
     // preselect flavor from ?flavor=
     var p=new URLSearchParams(location.search).get("flavor");if(p&&$("#f-"+p)){$("#f-"+p).checked=true;showFlavor(p)}
@@ -58,9 +69,9 @@
       if(ex)ex.qty=Math.min(20,ex.qty+n);else c.push({size:s,flavor:f,qty:n});
       save(c);var m=$("#added");m.classList.add("show");m.focus&&m.focus();
     };
-    document.querySelectorAll(".thumbs button").forEach(function(b){b.onclick=function(){
-      $("#main-img").src=b.dataset.src;$("#main-img").alt=b.dataset.alt;$("#main-img").style.objectPosition="";
-      document.querySelectorAll(".thumbs button").forEach(function(x){x.setAttribute("aria-pressed",x===b)})}});
+    if(thumbsEl)thumbsEl.addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;
+      setMain({src:b.dataset.src,alt:b.dataset.alt,pos:b.dataset.pos});
+      thumbsEl.querySelectorAll("button").forEach(function(x){x.setAttribute("aria-pressed",x===b)})});
   }
 
   // ---- cart page
