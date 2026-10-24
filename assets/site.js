@@ -40,13 +40,13 @@
       classic:{src:"images/hero.jpg",alt:"Kraft box of nine classic Swiss meringues in sage-green cups"},
       coffee:{src:"images/coffee-open.jpg",alt:"Open kraft box of nine coffee meringues",pos:"30% 50%",gallery:[
         {src:"images/coffee-open.jpg",alt:"Open kraft box of nine coffee meringues",pos:"30% 50%"},
-        {src:"images/coffee-tied.jpg",alt:"Box of coffee meringues tied with twine and a Coffee Meringue tag",pos:"50% 50%"},
+        {src:"images/coffee-tied.jpg?v=2",alt:"Box of coffee meringues tied with twine and a Coffee Meringue tag",pos:"50% 50%"},
         {src:"images/coffee-closeup.jpg",alt:"Close-up of a coffee meringue beside coffee beans",pos:"40% 50%"}]},
       chocolate:{src:"images/choc-open.jpg",alt:"Open kraft box of nine chocolate meringues dusted with cocoa",pos:"30% 50%",gallery:[
         {src:"images/choc-open.jpg",alt:"Open kraft box of nine chocolate meringues dusted with cocoa",pos:"30% 50%"},
-        {src:"images/choc-tied.jpg",alt:"Box of chocolate meringues tied with twine and a Meringue Suisse tag",pos:"30% 50%"},
+        {src:"images/choc-tied.jpg?v=2",alt:"Box of chocolate meringues tied with twine and a Meringue Suisse tag",pos:"30% 50%"},
         {src:"images/choc-closeup.jpg",alt:"Close-up of a chocolate meringue dusted with cocoa",pos:"50% 50%"},
-        {src:"images/chocolate.jpg",alt:"Chocolate meringues in their box beside pieces of dark chocolate and an espresso",pos:"25% 50%"}]}
+        {src:"images/chocolate.jpg?v=2",alt:"Chocolate meringues in their box beside pieces of dark chocolate and an espresso",pos:"25% 50%"}]}
     };
     // small photos under the main photo: per-flavor set when defined, else the default set
     var thumbsEl=$(".thumbs"),defaultThumbs=thumbsEl?thumbsEl.innerHTML:"";
@@ -80,7 +80,7 @@
   // ---- cart page
   var cartEl=$("#cart");
   if(cartEl){
-    var imgFor={classic:"images/classic.jpg",coffee:"images/coffee.jpg",chocolate:"images/chocolate.jpg"};
+    var imgFor={classic:"images/classic.jpg",coffee:"images/coffee.jpg?v=2",chocolate:"images/chocolate.jpg?v=2"};
     var render=function(){
       var c=load(),box=$("#lines"),sum=$("#summary");
       if(!c.length){box.innerHTML='<div class="empty"><p class="lede">Your cart is empty.</p><div class="btn-row" style="justify-content:center"><a class="btn" href="/shop">Shop PETITES</a></div></div>';sum.hidden=true;return}
