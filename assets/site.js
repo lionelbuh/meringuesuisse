@@ -38,7 +38,10 @@
     // flavor photo + subtitle follow the selected flavor
     var flavorImg={
       classic:{src:"images/hero.jpg",alt:"Kraft box of nine classic Swiss meringues in sage-green cups"},
-      coffee:{src:"images/coffee.jpg",alt:"Kraft box of nine coffee meringues tied with twine, beside coffee beans and an espresso",pos:"25% 50%"},
+      coffee:{src:"images/coffee-open.jpg",alt:"Open kraft box of nine coffee meringues",pos:"30% 50%",gallery:[
+        {src:"images/coffee-open.jpg",alt:"Open kraft box of nine coffee meringues",pos:"30% 50%"},
+        {src:"images/coffee-tied.jpg",alt:"Box of coffee meringues tied with twine and a Coffee Meringue tag",pos:"50% 50%"},
+        {src:"images/coffee-closeup.jpg",alt:"Close-up of a coffee meringue beside coffee beans",pos:"40% 50%"}]},
       chocolate:{src:"images/choc-open.jpg",alt:"Open kraft box of nine chocolate meringues dusted with cocoa",pos:"30% 50%",gallery:[
         {src:"images/choc-open.jpg",alt:"Open kraft box of nine chocolate meringues dusted with cocoa",pos:"30% 50%"},
         {src:"images/choc-tied.jpg",alt:"Box of chocolate meringues tied with twine and a Meringue Suisse tag",pos:"30% 50%"},
