@@ -193,3 +193,9 @@ details p{margin-top:.7rem;font-size:.97rem}
 .empty{text-align:center;padding:3rem 0}
 @media(max-width:820px){.cart{grid-template-columns:1fr}.line{grid-template-columns:64px 1fr auto}.line img{width:64px;height:64px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+.promo-bar{background:var(--sage-deep);color:#fff;text-align:center;font-size:.92rem;line-height:1.4}
+.promo-bar a{display:block;color:#fff;text-decoration:none;padding:.6rem 1rem}
+.promo-bar a:hover .u,.promo-bar a:focus .u{text-decoration:underline}
+.promo-bar .u{white-space:nowrap;margin-left:.3rem}
+#waitlist{scroll-margin-top:6rem}

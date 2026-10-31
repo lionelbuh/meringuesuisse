@@ -172,6 +172,12 @@
     render();
   }
 
+  // ---- "#waitlist" links (top banner): bring the sign-up form into view once the page has laid out
+  if(location.hash==="#waitlist"&&$("#waitlist")){
+    var goWl=function(){var w=$("#waitlist");if(!w||!w.offsetParent)return;w.scrollIntoView({block:"center"});var i=w.querySelector('input[type=email]');if(i)try{i.focus({preventScroll:true})}catch(e){}};
+    if(document.readyState==="complete")goWl();else window.addEventListener("load",goWl);
+  }
+
   // ---- thank-you page (Stripe success redirect): empty the cart
   if($("#thanks")){save([]);try{sessionStorage.removeItem("ms_promo_v1")}catch(e){}}
 
