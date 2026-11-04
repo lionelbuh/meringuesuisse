@@ -199,3 +199,4 @@ details p{margin-top:.7rem;font-size:.97rem}
 .promo-bar a:hover .u,.promo-bar a:focus .u{text-decoration:underline}
 .promo-bar .u{white-space:nowrap;margin-left:.3rem}
 #waitlist{scroll-margin-top:6rem}
+html:not(.promo-on) .promo-only{display:none!important}

@@ -106,13 +106,12 @@ generate the real batch after switching the Worker to the `sk_live_` key.
   If both succeed, tell Claude: a small lock can be added in the Worker (free).
 - Check the status CSV: the codes you used show `used`.
 
-## Sales switch (permit pending)
-While the Riverside County permit is pending, sales are **closed**:
-- `assets/config.js` → `salesOpen: false`: the shop and cart show "Permit pending" and a
-  "Join the waiting list" email form (sent through Formspree, with the flavor they were interested in).
-- Worker: without the variable `SALES_OPEN = true`, it refuses to create any payment page.
-
-To open sales once the permit arrives:
-1. Ask Claude to set `salesOpen: true` (or edit `assets/config.js` yourself and bump the `?v=` numbers).
-2. Cloudflare → Worker → **Settings → Variables and Secrets → Add** → type *Text*, name `SALES_OPEN`,
-   value `true` → **Deploy**. The Worker URL then shows `"sales":"open"`.
+## Sales switch
+Sales are **open** since the Riverside County permit was approved (Cottage Food Operation, Class A,
+Permit No. PR1007979, expires 11/30/2027).
+- `assets/config.js` -> `salesOpen: true` shows Add to cart and Checkout. `false` closes the shop again
+  and shows a waiting-list form instead.
+- Worker: the variable `SALES_OPEN` must be `true` (type *Text*) or it refuses to create payment pages.
+- `freeBoxSignup: true` shows the top banner and the shop form "Join the waiting list" where visitors ask
+  for a free-box code (arrives by email via Formspree, subject "Free box code request"). Send each person a
+  code generated on `/promo-admin`. Set it to `false` to remove the offer.

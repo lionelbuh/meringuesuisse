@@ -12,7 +12,10 @@ window.SITE = {
   // SALES SWITCH. false = permit pending: no cart checkout or payment, the shop and cart
   // show a "join the waiting list" form instead. Set to true (and SALES_OPEN=true in the
   // Cloudflare Worker) once the Riverside County permit is received.
-  salesOpen: false,
+  salesOpen: true,
+
+  // Top banner + shop sign-up form offering a free-box code. Set to false to hide them.
+  freeBoxSignup: true,
 
   // Label of the checkout button when sales are open.
   checkoutLabel: "Checkout",

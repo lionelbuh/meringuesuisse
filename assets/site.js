@@ -1,6 +1,7 @@
 (function(){
   var S=window.SITE, KEY="ms_cart_v1";
   if(S.salesOpen)document.documentElement.classList.add("sales-open");
+  if(S.freeBoxSignup)document.documentElement.classList.add("promo-on");
   var $=function(s,r){return (r||document).querySelector(s)};
   var money=function(n){return "$"+Number(n).toFixed(2)};
   var load=function(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}};
@@ -196,7 +197,7 @@
       if(S.formEndpoint){
         fetch(S.formEndpoint,{method:"POST",body:data,headers:{Accept:"application/json"}}).then(function(r){if(r.ok)done();else alert("Something went wrong. Please email "+S.contactEmail)}).catch(function(){alert("Something went wrong. Please email "+S.contactEmail)});
       }else{
-        var subj=kind==="contact"?(data.get("subject")||"Message from the website"):kind==="waitlist"?"Waiting list sign-up":"Newsletter sign-up";
+        var subj=kind==="contact"?(data.get("subject")||"Message from the website"):kind==="waitlist"?"Free box code request":"Newsletter sign-up";
         var body=kind==="contact"?"Name: "+data.get("name")+"\nEmail: "+data.get("email")+"\n\n"+data.get("message"):"Please add me to the Meringue Suisse list: "+data.get("email");
         window.location.href="mailto:"+S.contactEmail+"?subject="+encodeURIComponent(subj)+"&body="+encodeURIComponent(body);
         done();

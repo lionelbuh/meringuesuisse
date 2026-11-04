@@ -10,7 +10,7 @@ Plain HTML/CSS/JS. No build step, no dependencies. Works on GitHub Pages.
 ## Payments (Stripe)
 Follow **[STRIPE-SETUP.md](STRIPE-SETUP.md)**: create the Stripe account, deploy the small checkout worker
 (`stripe-checkout/worker.js`, free on Cloudflare), then paste its URL into `checkoutEndpoint` in `assets/config.js`.
-Until then, the cart's **"Order on the Waiting List"** button shows a "payment link coming soon" note.
+Sales are switched on with `salesOpen` in `assets/config.js` (see STRIPE-SETUP.md, "Sales switch").
 
 ## Free-box promo codes
 One-use codes for a free box (shipping still paid), managed in Stripe. Generate and export them at `/promo-admin`. See **[STRIPE-SETUP.md](STRIPE-SETUP.md#free-box-promo-codes-loyalty)**.
@@ -46,7 +46,7 @@ GitHub Pages has no server. By default the forms open the visitor's email app ad
 For real submissions, create a free Formspree form and paste its URL into `formEndpoint` in `config.js`.
 
 ## Still to fill in (yellow "to be added" notes on the site)
-Legal business name/address, permit details, ingredients, allergens, net weight, delivery times, shelf life, final Privacy/Terms review.
+Nothing left: permit PR1007979 (Riverside County CFO Class A) is on every page. Renew the permit before 11/30/2027.
 
 ## Browser cache
 Pages load `assets/style.css`, `config.js` and `site.js` with a `?v=YYYYMMDD` suffix. After changing one of
