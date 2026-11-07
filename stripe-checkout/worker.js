@@ -32,6 +32,9 @@ const SIZES = {
   // "box-18": { label: "Box of 18", price: 0 },
 };
 const FLAVORS = { classic: "Classic", coffee: "Coffee", chocolate: "Chocolate" };
+// Price of a box of 9 per flavor, in cents. Keep in sync with assets/config.js.
+const FLAVOR_PRICES = { classic: 1490, coffee: 1590, chocolate: 1590 };
+const unitPrice = (sizeId, flavor) => (sizeId === "box-9" && FLAVOR_PRICES[flavor]) || SIZES[sizeId].price;
 // Fixed Stripe product IDs (created automatically) so the free-box coupon can target them.
 const PRODUCT_ID = flavor => `ms_petites_${flavor}`;
 
@@ -135,7 +138,7 @@ async function checkout(stripe, body, json) {
     boxes += qty;
     params.append(`line_items[${i}][quantity]`, qty);
     params.append(`line_items[${i}][price_data][currency]`, CURRENCY);
-    params.append(`line_items[${i}][price_data][unit_amount]`, size.price);
+    params.append(`line_items[${i}][price_data][unit_amount]`, unitPrice(it.size, it.flavor));
     params.append(`line_items[${i}][price_data][product]`, PRODUCT_ID(it.flavor));
     i++;
   }
@@ -178,7 +181,8 @@ async function checkout(stripe, body, json) {
     const free = FLAVORS[body.freeFlavor] ? body.freeFlavor : "classic";
     params.append(`line_items[${i}][quantity]`, 1);
     params.append(`line_items[${i}][price_data][currency]`, CURRENCY);
-    params.append(`line_items[${i}][price_data][unit_amount]`, SIZES["box-9"].price);
+    // valued at exactly the coupon amount (any flavor) so the coupon makes it fully free
+    params.append(`line_items[${i}][price_data][unit_amount]`, FREE_BOX.amount);
     params.append(`line_items[${i}][price_data][product]`, PRODUCT_ID(free));
     i++;
     params.append("metadata[free_box]", FLAVORS[free]);

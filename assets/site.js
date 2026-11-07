@@ -13,6 +13,8 @@
   function flavor(id){return S.product.flavors.find(function(f){return f.id===id})}
   function boxes(c){return c.reduce(function(a,l){return a+l.qty},0)}
   function shipping(n){if(!n)return 0;var t=(S.shippingTiers||[]).find(function(t){return t.maxBoxes==null||n<=t.maxBoxes});return t?t.price:null}
+  function unitPrice(sizeId,flavorId){var s=size(sizeId),f=flavor(flavorId);return (s&&s.id==="box-9"&&f&&f.price)?f.price:(s?s.price:0)}
+  function fromPrice(){var ps=flavors().map(function(f){return unitPrice(sizes()[0].id,f.id)});return Math.min.apply(null,ps)}
   function esc(t){var d=document.createElement("div");d.textContent=t;return d.innerHTML}
 
   // nav
@@ -22,7 +24,7 @@
   // footer / contact links from config
   document.querySelectorAll("[data-email]").forEach(function(a){a.href="mailto:"+S.contactEmail;a.textContent=S.contactEmail});
   document.querySelectorAll("[data-instagram]").forEach(function(li){if(S.instagramUrl){li.hidden=false;li.querySelector("a").href=S.instagramUrl}else li.hidden=true});
-  document.querySelectorAll("[data-price]").forEach(function(el){el.textContent=money(sizes()[0].price)});
+  document.querySelectorAll("[data-price]").forEach(function(el){el.textContent=money(fromPrice())});
 
   // ---- shop page
   var shop=$("#shop");
@@ -31,7 +33,7 @@
     sz.innerHTML=sizes().map(function(s,i){return '<input type="radio" name="size" id="s-'+s.id+'" value="'+s.id+'"'+(i===0?' checked':'')+'><label for="s-'+s.id+'">'+esc(s.label)+'</label>'}).join("");
     fl.innerHTML=flavors().map(function(f,i){return '<input type="radio" name="flavor" id="f-'+f.id+'" value="'+f.id+'"'+(i===0?' checked':'')+'><label for="f-'+f.id+'">'+esc(f.name)+'</label>'}).join("");
     if(sizes().length<2)$("#size-field").hidden=true;
-    var upd=function(){var s=size($('input[name=size]:checked').value);price.textContent=money(s.price)};
+    var upd=function(){var fsel=$('input[name=flavor]:checked');price.textContent=money(unitPrice($('input[name=size]:checked').value,fsel?fsel.value:null))};
     sz.addEventListener("change",upd);upd();
     var q=$("#qty");
     $("#minus").onclick=function(){q.value=Math.max(1,+q.value-1)};
@@ -61,12 +63,12 @@
       var m=flavorImg[id];if(!m)return;setGallery(m.gallery);setMain(m);
       document.querySelectorAll(".thumbs button").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.src===m.src)});
     };
-    fl.addEventListener("change",function(){showFlavor($('input[name=flavor]:checked').value)});
+    fl.addEventListener("change",function(){showFlavor($('input[name=flavor]:checked').value);upd()});
     // load the flavor photos in the background so switching flavor is instant
     var preload=function(){Object.keys(flavorImg).forEach(function(k){[flavorImg[k]].concat(flavorImg[k].gallery||[]).forEach(function(g){var i=new Image();i.src=g.src})})};
     if(document.readyState==="complete")preload();else window.addEventListener("load",preload);
     // preselect flavor from ?flavor=
-    var p=new URLSearchParams(location.search).get("flavor");if(p&&$("#f-"+p)){$("#f-"+p).checked=true;showFlavor(p)}
+    var p=new URLSearchParams(location.search).get("flavor");if(p&&$("#f-"+p)){$("#f-"+p).checked=true;showFlavor(p);upd()}
     $("#add").onclick=function(){
       var c=load(),s=$('input[name=size]:checked').value,f=$('input[name=flavor]:checked').value,n=Math.max(1,Math.min(20,parseInt(q.value)||1));
       var ex=c.find(function(l){return l.size===s&&l.flavor===f});
@@ -86,8 +88,8 @@
       var c=load(),box=$("#lines"),sum=$("#summary");
       if(!c.length){box.innerHTML='<div class="empty"><p class="lede">Your cart is empty.</p><div class="btn-row" style="justify-content:center"><a class="btn" href="/shop">Shop PETITES</a></div></div>';sum.hidden=true;return}
       sum.hidden=false;var sub=0;
-      box.innerHTML=c.map(function(l,i){var s=size(l.size),f=flavor(l.flavor);if(!s||!f)return"";sub+=s.price*l.qty;
-        return '<div class="line"><img src="'+(imgFor[l.flavor]||"images/closeup.jpg")+'" alt=""><div><h3>'+esc(S.product.name)+' — '+esc(f.name)+'</h3><div class="meta">'+esc(s.label)+' · '+money(s.price)+' each</div><button class="rm" data-i="'+i+'">Remove</button></div><div class="qty" aria-label="Quantity"><button data-d="-1" data-i="'+i+'" aria-label="Decrease">−</button><input value="'+l.qty+'" readonly aria-label="Quantity"><button data-d="1" data-i="'+i+'" aria-label="Increase">+</button></div></div>'}).join("");
+      box.innerHTML=c.map(function(l,i){var s=size(l.size),f=flavor(l.flavor);if(!s||!f)return"";var up=unitPrice(l.size,l.flavor);sub+=up*l.qty;
+        return '<div class="line"><img src="'+(imgFor[l.flavor]||"images/closeup.jpg")+'" alt=""><div><h3>'+esc(S.product.name)+' — '+esc(f.name)+'</h3><div class="meta">'+esc(s.label)+' · '+money(up)+' each</div><button class="rm" data-i="'+i+'">Remove</button></div><div class="qty" aria-label="Quantity"><button data-d="-1" data-i="'+i+'" aria-label="Decrease">−</button><input value="'+l.qty+'" readonly aria-label="Quantity"><button data-d="1" data-i="'+i+'" aria-label="Increase">+</button></div></div>'}).join("");
       $("#sub").textContent=money(sub);
       var n=boxes(c),ship=shipping(n),pr=promo(),dv=delivery(),isLocal=dv.method==="local"&&localOk(dv.zip);
       if(isLocal)ship=0;

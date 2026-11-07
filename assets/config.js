@@ -56,9 +56,10 @@ window.SITE = {
       { id: "box-27", label: "Box of 27", count: 27, price: 0,     enabled: false }
     ],
     flavors: [
-      { id: "classic",   name: "Classic",   enabled: true },
-      { id: "coffee",    name: "Coffee",    enabled: true },
-      { id: "chocolate", name: "Chocolate", enabled: true }
+      // price: price of a box of 9 in this flavor (overrides the size price). Keep in sync with the worker.
+      { id: "classic",   name: "Classic",   price: 14.90, enabled: true },
+      { id: "coffee",    name: "Coffee",    price: 15.90, enabled: true },
+      { id: "chocolate", name: "Chocolate", price: 15.90, enabled: true }
     ]
   }
 };

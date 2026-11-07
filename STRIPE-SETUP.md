@@ -60,7 +60,7 @@ The worker only accepts requests from `meringuesuisse.com`, so test on the live 
 ## Changing prices or shipping later
 Change **both** `assets/config.js` (what the cart shows) and the top of `stripe-checkout/worker.js`
 (what Stripe charges), then re-deploy the worker (Edit code → paste → Deploy).
-Worker prices are in cents: `1490` = $14.90.
+Worker prices are in cents: `1490` = $14.90. Per-flavor prices: `price` on each flavor in `assets/config.js` and `FLAVOR_PRICES` in the worker (Classic 14.90, Coffee 15.90, Chocolate 15.90).
 
 ## Good to know
 - Stripe Checkout restricts shipping by country, not by state. It is set to the US only.
