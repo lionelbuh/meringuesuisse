@@ -52,3 +52,11 @@ Nothing left: permit PR1007979 (Riverside County CFO Class A) is on every page. 
 Pages load `assets/style.css`, `config.js` and `site.js` with a `?v=YYYYMMDD` suffix. After changing one of
 those files, bump the number in every `.html` page so visitors get the new version immediately
 (otherwise browsers may keep the old file for up to 10 minutes).
+
+## Search engines
+
+- `sitemap.xml` and `robots.txt` at the root; Google reads the sitemap (submit it once in Google Search
+  Console as `https://meringuesuisse.com/sitemap.xml`).
+- **IndexNow**: after each push to `main`, `.github/workflows/indexnow.yml` sends every sitemap URL to Bing,
+  Yandex, Seznam and Naver (public key in `<key>.txt` at the root). It can also be run by hand from the
+  Actions tab (“Run workflow”).

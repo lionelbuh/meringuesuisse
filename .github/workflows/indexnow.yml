@@ -1,0 +1,29 @@
+name: IndexNow
+
+# After each change on main, tells the IndexNow search engines (Bing, Yandex, Seznam, Naver…) that the
+# pages of meringuesuisse.com changed, so Bing does not wait weeks to visit. Google does not use
+# IndexNow: it reads the sitemap listed in robots.txt.
+# The site itself is still published by GitHub Pages from the main branch; this only sends a notice.
+# The key is public by design; the same value is published at https://meringuesuisse.com/<key>.txt.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    env:
+      INDEXNOW_KEY: ef892806af06295e4e6cb2192e6ad6a1
+    steps:
+      - name: Submit the sitemap URLs to IndexNow
+        run: |
+          sleep 120  # let GitHub Pages publish the new version first
+          urls=$(curl -fsS https://meringuesuisse.com/sitemap.xml | grep -o '<loc>[^<]*' | sed 's/<loc>//' | jq -R . | jq -s .)
+          jq -n --argjson urls "$urls" --arg key "$INDEXNOW_KEY" \
+            '{host: "meringuesuisse.com", key: $key, keyLocation: ("https://meringuesuisse.com/" + $key + ".txt"), urlList: $urls}' \
+            | curl -sS -X POST https://api.indexnow.org/indexnow \
+                -H 'Content-Type: application/json; charset=utf-8' --data-binary @- -o /dev/null -w 'IndexNow: HTTP %{http_code}\n'
