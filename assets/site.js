@@ -83,7 +83,7 @@
   // ---- cart page
   var cartEl=$("#cart");
   if(cartEl){
-    var imgFor={classic:"images/classic.jpg?v=2",coffee:"images/coffee.jpg?v=2",chocolate:"images/chocolate.jpg?v=2"};
+    var imgFor={classic:"images/classic.jpg?v=3",coffee:"images/coffee.jpg?v=2",chocolate:"images/chocolate.jpg?v=2"};
     var render=function(){
       var c=load(),box=$("#lines"),sum=$("#summary");
       if(!c.length){box.innerHTML='<div class="empty"><p class="lede">Your cart is empty.</p><div class="btn-row" style="justify-content:center"><a class="btn" href="/shop">Shop PETITES</a></div></div>';sum.hidden=true;return}
