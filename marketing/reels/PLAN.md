@@ -1,6 +1,6 @@
 # Instagram Reels plan (internal, not linked from the site)
 
-Scripts: `tg.py` (mascot drawing helpers + Thanksgiving reel), `petites.py` (Reel 01 "Meet PETITES").
+Scripts: `tg.py` (mascot drawing helpers + Thanksgiving reel), `petites.py` (Reel 01 "Meet PETITES"), `reel02.py` (Meiringen legend).
 Run `./get-fonts.sh` first, then `python3 petites.py out.mp4` or `python3 petites.py preview frames.png`.
 Real photos come from `../../images/`. Output: 1080x1920, 30 fps, no audio (music is added in Instagram).
 
@@ -15,7 +15,7 @@ Real photos come from `../../images/`. Output: 1080x1920, 30 fps, no audio (musi
 |---|---|---|
 | Mon Nov 16 | 01 | Meet PETITES (done: petites.py) |
 | Thu Nov 19 | TG | Thanksgiving (done: tg.py) |
-| Mon Nov 23 | 02 | Swiss story: Meiringen legend. Mascot with tiny backpack/hiking, Matterhorn photo |
+| Mon Nov 23 | 02 | Swiss story: Meiringen legend (done: reel02.py) |
 | Thu Nov 26 | 03 | Happy Thanksgiving + three flavors. Three mascots: classic, coffee (beige), chocolate (cocoa dots) |
 | Mon Nov 30 | 04 | Gift idea for the holidays. Mascot wrapped with a green bow, tied-box photos |
 | Thu Dec 3  | 05 | Swiss story: meringues with Gruyere double cream. Mascot dives into a cream bowl, close-up photo |
